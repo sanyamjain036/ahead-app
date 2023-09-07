@@ -61,8 +61,34 @@ export default function Home() {
     });
   }
 
-  function getFromTop(className) {}
+  function getFromTop(className) {
+    gsap.from(className, {
+      opacity: 0,
+      y: 150,
+      duration: 1,
+      scrollTrigger: {
+        trigger: className,
+        start: "top 70%",
+        end: () => `+=150px`,
+        scrub: 1,
+      },
+    });
+  }
 
+  function getStaggered(className) {
+    gsap.from(className, {
+      opacity: 0,
+      y: 150,
+      duration: 1,
+      stagger: 0.25,
+      scrollTrigger: {
+        trigger: className,
+        start: "top 70%",
+        end: () => `+=150px`,
+        scrub: 1,
+      },
+    });
+  }
   function rotate360deg(className) {
     gsap.to(className, {
       rotateZ: 360,
@@ -89,7 +115,7 @@ export default function Home() {
       });
       // circle_round
       gsap.from(".circle_round", {
-        rotateZ: "180%",
+        rotateZ: "100%",
         delay: 0.5,
         duration: 1.5,
         ease: "power3.out",
@@ -155,6 +181,9 @@ export default function Home() {
       getFromBottom(".start-test-btn");
       getFromLeft(".working_with_us_left");
       getFromRight(".working_with_us_right");
+      getFromTop(".think_about_you");
+      getStaggered(".hori_timeline_circle");
+      getStaggered(".hori_timeline_circle_item");
     }, container);
 
     return () => ctx.revert(); // cleanup
@@ -188,15 +217,26 @@ export default function Home() {
         </header>
 
         <main className="w-full">
-          <section className=" py-24 rounded-xl bg-purple-50 px-8">
+          <section className="relative overflow-hidden rounded-xl bg-purple-50 px-8 py-24">
+            <img
+              width="64"
+              height="64"
+              className="absolute left-[6rem] top-[3rem]"
+              src="https://img.icons8.com/dusk/64/leaf.png"
+              alt="leaf"
+            />
+            <div className="absolute left-[37rem] top-[2.5rem] h-8 w-8 rounded-full bg-red-100"></div>
+            <div className="absolute h-10 w-10 rounded-full bg-red-100"></div>
+            <div className="absolute -left-3 bottom-10 h-20 w-20 rounded-full bg-red-100"></div>
+            <div className="absolute -bottom-5 left-1/4 h-20 w-20 rounded-full bg-red-400"></div>
             <div className="flex h-[inherit] items-center justify-between gap-5 ">
-              <div className=" flex flex-col items-center justify-center">
-                <div className="ml-8">
+              <div className=" flex  flex-col items-center justify-center">
+                <div className="ml-8 ">
                   <div className=" hero_text mb-8">Ahead app</div>
                   <h2 className="hero_text mb-4 text-5xl font-bold md:text-6xl ">
-                    Lorem, ipsum dolor <br />
-                    sit amet
-                    <br /> consectetu.
+                    Master your life <br />
+                    by mastering
+                    <br /> emotions
                   </h2>
                   <div className="flex items-center">
                     <img
@@ -204,21 +244,36 @@ export default function Home() {
                       alt="applelogo"
                       className="w-1/4"
                     />
-                    <img
-                      src="https://static.vecteezy.com/system/resources/thumbnails/009/663/927/small/5-star-rating-review-star-transparent-free-png.png"
-                      alt="rating"
-                      className="w-1/4"
-                    />
+                    <div className="relative">
+                      <img
+                        src="https://static.vecteezy.com/system/resources/thumbnails/009/663/927/small/5-star-rating-review-star-transparent-free-png.png"
+                        alt="rating"
+                        className=" w-[12rem] "
+                      />
+                      <span className="absolute bottom-5 left-7 box-content block text-sm text-gray-500">
+                        100+ App reviews
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
               <div>
                 <div className="circle_round relative hidden h-[32rem] w-[32rem] rounded-full border-[8px] border-dashed border-white	 bg-transparent  text-white md:block">
-                  <img
-                    src="https://uploads-ssl.webflow.com/5f778340ed26b167bd087abe/634979ed000ded7d0b9f4f21_apple.png"
-                    alt="apple"
-                    className="w-24"
+                  <div className="absolute left-1/2 top-1/2 h-[20rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-100"></div>
+
+                  <Image
+                    priority
+                    src={ghostPng}
+                    alt="ghost"
+                    className="absolute right-8 w-16"
                   />
+                  <Image
+                    priority
+                    src={ghostPng}
+                    alt="ghost"
+                    className="absolute bottom-0 w-16"
+                  />
+                  <Image priority src={ghostPng} alt="ghost" className="w-16" />
                   <img
                     src="https://freesvg.org/img/1527145993.png"
                     alt="phone"
@@ -428,36 +483,36 @@ export default function Home() {
           {/* what others think of you */}
           <section className="pb-40">
             <div className="rounded-2xl bg-blue-50 px-2 py-12 md:px-10 ">
-              <p className=" mb-7 text-center text-lg">
+              <p className="think_about_you mb-7 text-center text-lg">
                 Let your friends, and co-workers (anonymously) rate your social
                 skills.
               </p>
-              <p className=" mb-24 text-center text-5xl font-bold">
+              <p className="think_about_you mb-24 text-center text-5xl font-bold">
                 Ever wondered what others thinks about you?
               </p>
 
               <div className="mx-auto mb-40 flex w-full items-center justify-center">
                 <div className="grid w-full grid-cols-2 md:w-3/4">
                   <div className="relative border-t-4 border-dashed border-yellow-400">
-                    <span className="absolute left-[-16px] top-[-16px] box-content  flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400 text-center  font-bold text-white">
+                    <span className="hori_timeline_circle absolute left-[-16px] top-[-16px] box-content  flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400 text-center  font-bold text-white">
                       1
                     </span>
-                    <span className="absolute bottom-[-70px] left-[-120px] box-content block px-5 py-3 text-sm text-black">
+                    <span className="hori_timeline_circle_item absolute bottom-[-70px] left-[-120px] box-content block px-5 py-3 text-sm text-black">
                       Answer questions on your social skills
                     </span>
                   </div>
-                  <div className="relative border-t-4 border-dashed border-yellow-400">
-                    <span className="absolute left-[-16px] top-[-16px] box-content  flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400 text-center  font-bold text-white">
+                  <div className=" relative border-t-4 border-dashed border-yellow-400">
+                    <span className="hori_timeline_circle absolute left-[-16px] top-[-16px] box-content  flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400 text-center  font-bold text-white">
                       2
                     </span>
-                    <span className="absolute bottom-[-80px] left-[-150px] box-content block px-5 py-3 text-center text-sm text-black">
+                    <span className="hori_timeline_circle_item absolute bottom-[-80px] left-[-150px] box-content block px-5 py-3 text-center text-sm text-black">
                       Let others anonymously answer the same <br /> questions
                       about you.
                     </span>
-                    <span className="absolute right-[0px] top-[-16px] box-content flex h-8 w-8  items-center justify-center rounded-full bg-yellow-400 text-center font-bold text-white">
+                    <span className="hori_timeline_circle  absolute right-[0px] top-[-16px] box-content flex h-8 w-8  items-center justify-center rounded-full bg-yellow-400 text-center font-bold text-white">
                       3
                     </span>
-                    <span className="absolute bottom-[-80px] right-[-120px] box-content block px-5 py-3 text-center text-sm text-black">
+                    <span className="hori_timeline_circle_item absolute bottom-[-80px] right-[-120px] box-content block px-5 py-3 text-center text-sm text-black">
                       Find out where you and others see things <br /> the same
                       way - and where not
                     </span>
@@ -468,25 +523,25 @@ export default function Home() {
               <div className="mx-auto flex h-72 w-3/4 items-center justify-center rounded-md bg-white py-6 shadow-md">
                 <div className="grid w-full grid-cols-3 md:w-3/4">
                   <div className="relative border-t-2 border-slate-400">
-                    <span className="absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-indigo-600"></span>
-                    <span className="absolute left-[-61px] top-[-84px] box-content block rounded-lg bg-indigo-600 px-5 py-3 text-white">
+                    <span className="hori_timeline_circle absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-indigo-600"></span>
+                    <span className="hori_timeline_circle_item absolute left-[-61px] top-[-84px] box-content block rounded-lg bg-indigo-600 px-5 py-3 text-white">
                       {" "}
                       You
                     </span>
                   </div>
                   <div className="relative border-t-2 border-slate-400">
-                    <span className="absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-cyan-400"></span>
-                    <span className="absolute bottom-[-80px] left-[0px] box-content block rounded-lg bg-cyan-400 px-5 py-3 text-white">
+                    <span className="hori_timeline_circle absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-cyan-400"></span>
+                    <span className="hori_timeline_circle_item absolute bottom-[-80px] left-[0px] box-content block rounded-lg bg-cyan-400 px-5 py-3 text-white">
                       Anonymonos 1
                     </span>
                   </div>
                   <div className="relative border-t-2 border-slate-400">
-                    <span className="absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-amber-400"></span>
-                    <span className="absolute left-[-10px] top-[-80px] box-content block rounded-lg bg-amber-400 px-5 py-3 text-white">
+                    <span className="hori_timeline_circle absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-amber-400"></span>
+                    <span className="hori_timeline_circle_item absolute left-[-10px] top-[-80px] box-content block rounded-lg bg-amber-400 px-5 py-3 text-white">
                       Anonymonos 2
                     </span>
-                    <span className="absolute right-[0px] top-[-16px] box-content block h-8 w-8 rounded-full bg-teal-400"></span>
-                    <span className="absolute bottom-[-80px] right-[-120px] box-content block rounded-lg bg-teal-400 px-5 py-3 text-white">
+                    <span className="hori_timeline_circle absolute right-[0px] top-[-16px] box-content block h-8 w-8 rounded-full bg-teal-400"></span>
+                    <span className="hori_timeline_circle_item absolute bottom-[-80px] right-[-120px] box-content block rounded-lg bg-teal-400 px-5 py-3 text-white">
                       Anonymonos 3
                     </span>
                   </div>
