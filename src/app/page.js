@@ -7,12 +7,75 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Image from "next/image";
 import rocketSvg from "../../public/rocket.svg";
 import flowerPng from "../../public/flower.png";
+import ghostPng from "../../public/ghost.png";
 
 export default function Home() {
   gsap.registerPlugin(ScrollTrigger);
   gsap.registerPlugin(MotionPathPlugin);
 
   const container = useRef();
+
+  function getFromLeft(className) {
+    gsap.from(className, {
+      opacity: 0,
+      x: -100,
+      y: -10,
+      duration: 5,
+      ease: "power1.out",
+      scrollTrigger: {
+        trigger: className,
+        start: "-50% 70%",
+        end: "+=250",
+        scrub: 1,
+      },
+    });
+  }
+
+  function getFromRight(className) {
+    gsap.from(className, {
+      opacity: 0,
+      x: +80,
+      y: -10,
+      duration: 5,
+      ease: "power1.out",
+      scrollTrigger: {
+        trigger: className,
+        start: "-50% 70%",
+        end: "+=250",
+        scrub: 1,
+      },
+    });
+  }
+  function getFromBottom(className) {
+    gsap.from(className, {
+      y: 100,
+      opacity: 0,
+      duration: 1,
+      delay: 0,
+      scrollTrigger: {
+        trigger: className,
+        start: "-250 70%",
+        end: () => `+=150px`,
+        scrub: 1,
+      },
+    });
+  }
+
+  function getFromTop(className) {}
+
+  function rotate360deg(className) {
+    gsap.to(className, {
+      rotateZ: 360,
+      duration: 3,
+      delay: 0.5,
+      scrollTrigger: {
+        trigger: className,
+        start: "-50% 70%",
+        end: () => `+=${window.innerHeight}`,
+        scrub: 1,
+      },
+    });
+  }
 
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
@@ -22,41 +85,22 @@ export default function Home() {
         opacity: 0,
         delay: 0.6,
         duration: 2,
-        ease: "power4.out",
+        ease: "power3.out",
       });
       // circle_round
       gsap.from(".circle_round", {
-        rotateZ: "50%",
-        delay: 0.6,
-        duration: 2,
-        ease: "power4.out",
+        rotateZ: "180%",
+        delay: 0.5,
+        duration: 1.5,
+        ease: "power3.out",
       });
-      //emoji title
-      gsap.from(".emoji_cards_title", {
-        opacity: 0,
-        x: -50,
-        y: -10,
-        ease: "elastic.out(1, 0.3)",
-        scrollTrigger: {
-          trigger: ".emoji_cards_title",
-          start: "top center",
-          end: "+=250",
-          scrub: 1,
-        },
-      });
-      //setting rocket svg
-      gsap.set(".rocketSvg", {
-        xPercent: -50,
-        yPercent: -50,
-        transformOrigin: "50% 50%",
-        rotateZ: "30%",
-      });
+
       // rocket timeline
       let test = gsap.timeline({
         scrollTrigger: {
           trigger: ".rocketSvg",
-          start: "top center",
-          end: () => "+=" + 250,
+          start: "-50% 70%",
+          end: () => "+=" + 350,
           scrub: true,
         },
       });
@@ -84,48 +128,16 @@ export default function Home() {
           snap: 1 / (emojiCards.length - 1),
         },
       });
-
+      //emoji title
+      getFromLeft(".emoji_cards_title");
       //meet_app_title
-      gsap.from(".meet_app_title", {
-        opacity: 0,
-        x: -80,
-        y: -10,
-        duration: 5,
-        ease: "elastic.out(1, 0.3)",
-        scrollTrigger: {
-          trigger: ".meet_app_title",
-          start: "-50% 70%",
-          end: "+=250",
-          scrub: 1,
-        },
-      });
-
+      getFromLeft(".meet_app_title");
+      //open_position_title
+      getFromLeft(".open_position_title");
       //meet_app_para
-      gsap.from(".meet_app_para", {
-        opacity: 0,
-        x: +80,
-        y: -10,
-        duration: 5,
-        ease: "elastic.out(1, 0.3)",
-        scrollTrigger: {
-          trigger: ".meet_app_para",
-          start: "-50% 70%",
-          end: "+=250",
-          scrub: 1,
-        },
-      });
+      getFromRight(".meet_app_para");
       // rotating svg
-      gsap.to(".flowerSvg", {
-        rotateZ: 360,
-        duration: 3,
-        delay: 0.5,
-        scrollTrigger: {
-          trigger: ".flowerSvg",
-          start: "-50% 70%",
-          end: () => `+=${window.innerHeight}`,
-          scrub: 1,
-        },
-      });
+      rotate360deg(".flowerSvg");
       //typing text
       gsap.from(".typing-text", {
         width: 0,
@@ -138,19 +150,11 @@ export default function Home() {
           scrub: 1,
         },
       });
-
-      gsap.from(".start-test-btn", {
-        y: 80,
-        opacity: 0,
-        duration: 1,
-        delay: 0,
-        scrollTrigger: {
-          trigger: ".start-test-btn",
-          start: "-300 center",
-          end: () => `+=120px`,
-          scrub: 1,
-        },
-      });
+      getFromLeft(".self_improvement_title");
+      // start test button
+      getFromBottom(".start-test-btn");
+      getFromLeft(".working_with_us_left");
+      getFromRight(".working_with_us_right");
     }, container);
 
     return () => ctx.revert(); // cleanup
@@ -158,14 +162,14 @@ export default function Home() {
 
   return (
     <>
-      <div className="mx-auto w-11/12" ref={container}>
+      <div className="mx-auto w-11/12 max-w-7xl " ref={container}>
         {/* navbar */}
         <header className="sticky left-0 top-0 z-10 w-full bg-white p-4">
           <div className=" w-full items-center justify-between sm:mx-auto sm:w-3/4 md:flex ">
             <div className="">
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPhm_KT3CgphazKBiPpOm3jO2e22iQrjw7CA&usqp=CAU"
-                className="w-16"
+                src="https://www.ahead-app.com/favicon.ico"
+                className="w-16 rounded-xl"
                 alt="logo"
               />
             </div>
@@ -184,7 +188,7 @@ export default function Home() {
         </header>
 
         <main className="w-full">
-          <section className="h-[44rem] rounded-xl bg-purple-50 px-8">
+          <section className=" py-24 rounded-xl bg-purple-50 px-8">
             <div className="flex h-[inherit] items-center justify-between gap-5 ">
               <div className=" flex flex-col items-center justify-center">
                 <div className="ml-8">
@@ -225,15 +229,15 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="my-64">
+          <section className=" pb-40 pt-20">
             <div className="grid grid-cols-1 gap-12 px-12 md:grid-cols-3 md:gap-0">
-              <div className="text-3xl font-bold">EQ beats IQ</div>
-              <div className="w-3/4">
+              <div className="text-4xl font-bold">EQ beats IQ</div>
+              <div className="w-3/4 text-gray-600">
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                 Corrupti, doloribus? Lorem ipsum dolor sit amet. Lorem ipsum,
                 dolor sit amet consectetur adipisiciDolore,{" "}
               </div>
-              <div className="w-3/4">
+              <div className="w-3/4 text-gray-600">
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                 Corrupti, doloribus? Lorem ipsum dolor sit amet. Lorem ipsum,
                 dolor sit amet consectetur{" "}
@@ -242,7 +246,7 @@ export default function Home() {
 
             <div className="emoji_cards mt-32">
               <div className="flex items-center justify-start">
-                <div className="emoji_cards_title mb-6 text-4xl font-bold ">
+                <div className="emoji_cards_title mb-6 text-6xl font-bold ">
                   Does this sound familiar...
                 </div>
                 <Image
@@ -258,28 +262,39 @@ export default function Home() {
                 />
               </div>
               <div className="no-scrollbar relative  flex	h-72 items-center gap-10 overflow-y-hidden overflow-x-scroll">
-                <Card emoji={`😎`} classes="emoji_card bg-yellow-200" />
-                <Card emoji={`😇`} classes="emoji_card bg-lime-200" />
-                <Card emoji={`🤩`} classes="emoji_card bg-orange-200" />
+                <Card emoji={`😎`} classes="emoji_card bg-yellow-100" />
+                <Card emoji={`😇`} classes="emoji_card bg-lime-100" />
+                <Card emoji={`🤩`} classes="emoji_card bg-orange-100" />
                 <Card
                   emoji={`😉`}
                   classes="emoji_card bg-purple-200 -rotate-[15deg]"
                 />
-                <Card emoji={`😉`} classes="emoji_card bg-rose-200" />
-                <Card emoji={`😉`} classes="emoji_card bg-teal-200" />
-                <Card emoji={`😉`} classes="emoji_card bg-lime-200" />
+                <Card emoji={`😉`} classes="emoji_card bg-rose-100" />
+                <Card emoji={`😉`} classes="emoji_card bg-teal-100" />
+                <Card emoji={`😉`} classes="emoji_card bg-lime-100" />
               </div>
             </div>
           </section>
 
-          <section className=" my-64">
-            <div className="relative grid h-full grid-cols-1 rounded-xl bg-orange-50 px-4 py-10 md:h-[36rem] md:grid-cols-3 md:px-8">
+          <section className=" pb-30">
+            <div className="relative grid h-full grid-cols-1 overflow-hidden rounded-xl bg-orange-50 px-4 py-10 md:h-[36rem] md:grid-cols-3 md:px-8">
               <Image
                 priority
                 src={flowerPng}
                 alt="flower"
-                className="flowerSvg absolute -top-10 right-12 w-24 "
+                className="flowerSvg absolute right-12 top-4 w-24 "
               />
+              <svg
+                viewBox="0 0 200 200"
+                className="absolute -bottom-[200px] -left-[150px] w-[40rem]"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill="#FFDFB7"
+                  d="M43.5,-34.9C56,-19,65.5,-0.9,62.9,15.9C60.3,32.7,45.5,48.2,27.5,56.8C9.5,65.3,-11.8,66.9,-28.9,59C-46,51.1,-59,33.8,-65.5,12.9C-71.9,-8.1,-71.8,-32.6,-59.8,-48.4C-47.7,-64.2,-23.9,-71.2,-4.2,-67.8C15.5,-64.5,31,-50.8,43.5,-34.9Z"
+                  transform="translate(100 100)"
+                />
+              </svg>
               <div className=" mb-8 md:col-span-2 md:mb-0 md:ml-8 md:py-24">
                 <div className="meet_app_title mb-10 text-lg">
                   Built out of frustation
@@ -287,12 +302,16 @@ export default function Home() {
                 <div className="meet_app_title text-6xl font-bold">
                   Meet the ahead app
                 </div>
-                <div className="mt-8 flex justify-center">
-                  <img
-                    src="https://static.wixstatic.com/media/729578_73b7c3a111284b42be7935df60aef924~mv2.png/v1/crop/x_0,y_28,w_1080,h_1024/fill/w_692,h_656,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/Artisan-Doodles-Color.png"
-                    alt="flower"
-                    className=" w-48"
-                  />{" "}
+                <div className="relative mt-8">
+                  <div className="relative h-[10rem] w-[10rem]  rounded-full bg-slate-100 md:translate-x-28">
+                    <div className="absolute right-0 h-[9rem] w-[9rem]  rounded-full bg-white "></div>
+                    <Image
+                      priority
+                      src={ghostPng}
+                      alt="ghost"
+                      className="absolute left-1/2 top-1/2 w-24 -translate-x-1/2 -translate-y-1/2 "
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -309,26 +328,29 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="my-56">
+          {/* vertical timeline */}
+          <section className="pb-10 pt-40">
             <div className="mb-16">
-              <p className="mb-6">
+              <p className="self_improvement_title mb-6">
                 Wrong with self-improvement & how we're fixing it
               </p>
-              <h3 className="text-5xl font-bold">Self-improvement. Ugh. </h3>
+              <h3 className="self_improvement_title text-6xl font-bold">
+                Self-improvement. Ugh.{" "}
+              </h3>
             </div>
 
-            <div class=" mx-auto flex w-1/2  flex-col p-2">
-              <div class="-my-6">
+            <div className=" mx-auto flex w-full flex-col  p-2 md:w-1/2">
+              <div className="-my-6">
                 {/* <!-- Item #1 --> */}
-                <div class="group relative py-6 pl-8 sm:pl-32">
+                <div className="group relative py-6 pl-8 sm:pl-32">
                   {/* <!-- Vertical line (::before) ~ Date ~ Title ~ Circle marker (::after) --> */}
-                  <div class="mb-1 flex flex-col items-start before:absolute before:left-2 before:h-full before:-translate-x-1/2 before:translate-y-3 before:self-start before:bg-slate-300 before:px-px after:absolute after:left-2 after:box-content after:h-2 after:w-2 after:-translate-x-1/2 after:translate-y-1.5 after:rounded-full after:border-4 after:border-slate-50 after:bg-indigo-600 group-last:before:hidden sm:flex-row sm:before:left-0 sm:before:ml-[6.5rem] sm:after:left-0 sm:after:ml-[6.5rem]">
-                    <div class="text-xl font-bold text-slate-900">
+                  <div className="mb-1 flex flex-col items-start before:absolute before:left-2 before:h-full before:-translate-x-1/2 before:translate-y-3 before:self-start before:bg-slate-300 before:px-px after:absolute after:left-2 after:box-content after:h-2 after:w-2 after:-translate-x-1/2 after:translate-y-1.5 after:rounded-full after:border-4 after:border-slate-50 after:bg-indigo-600 group-last:before:hidden sm:flex-row sm:before:left-0 sm:before:ml-[6.5rem] sm:after:left-0 sm:after:ml-[6.5rem]">
+                    <div className="text-xl font-bold text-slate-900">
                       Acme was founded in Milan, Italy
                     </div>
                   </div>
                   {/* <!-- Content --> */}
-                  <div class="text-slate-500">
+                  <div className="text-slate-500">
                     Pretium lectus quam id leo. Urna et pharetra pharetra massa
                     massa. Adipiscing enim eu neque aliquam vestibulum morbi
                     blandit cursus risus.
@@ -336,15 +358,15 @@ export default function Home() {
                 </div>
 
                 {/* <!-- Item #2 --> */}
-                <div class="group relative py-6 pl-8 sm:pl-32">
+                <div className="group relative py-6 pl-8 sm:pl-32">
                   {/* <!-- Vertical line (::before) ~ Date ~ Title ~ Circle marker (::after) --> */}
-                  <div class="mb-1 flex flex-col items-start before:absolute before:left-2 before:h-full before:-translate-x-1/2 before:translate-y-3 before:self-start before:bg-slate-300 before:px-px after:absolute after:left-2 after:box-content after:h-2 after:w-2 after:-translate-x-1/2 after:translate-y-1.5 after:rounded-full after:border-4 after:border-slate-50 after:bg-indigo-600 group-last:before:hidden sm:flex-row sm:before:left-0 sm:before:ml-[6.5rem] sm:after:left-0 sm:after:ml-[6.5rem]">
-                    <div class="text-xl font-bold text-slate-900">
+                  <div className="mb-1 flex flex-col items-start before:absolute before:left-2 before:h-full before:-translate-x-1/2 before:translate-y-3 before:self-start before:bg-slate-300 before:px-px after:absolute after:left-2 after:box-content after:h-2 after:w-2 after:-translate-x-1/2 after:translate-y-1.5 after:rounded-full after:border-4 after:border-slate-50 after:bg-indigo-600 group-last:before:hidden sm:flex-row sm:before:left-0 sm:before:ml-[6.5rem] sm:after:left-0 sm:after:ml-[6.5rem]">
+                    <div className="text-xl font-bold text-slate-900">
                       Reached 5K customers
                     </div>
                   </div>
                   {/* <!-- Content --> */}
-                  <div class="text-slate-500">
+                  <div className="text-slate-500">
                     Pretium lectus quam id leo. Urna et pharetra pharetra massa
                     massa. Adipiscing enim eu neque aliquam vestibulum morbi
                     blandit cursus risus.
@@ -352,30 +374,30 @@ export default function Home() {
                 </div>
 
                 {/* <!-- Item #3 --> */}
-                <div class="group relative py-6 pl-8 sm:pl-32">
+                <div className="group relative py-6 pl-8 sm:pl-32">
                   {/* <!-- Vertical line (::before) ~ Date ~ Title ~ Circle marker (::after) --> */}
-                  <div class="mb-1 flex flex-col items-start before:absolute before:left-2 before:h-full before:-translate-x-1/2 before:translate-y-3 before:self-start before:bg-slate-300 before:px-px after:absolute after:left-2 after:box-content after:h-2 after:w-2 after:-translate-x-1/2 after:translate-y-1.5 after:rounded-full after:border-4 after:border-slate-50 after:bg-indigo-600 group-last:before:hidden sm:flex-row sm:before:left-0 sm:before:ml-[6.5rem] sm:after:left-0 sm:after:ml-[6.5rem]">
-                    <div class="text-xl font-bold text-slate-900">
+                  <div className="mb-1 flex flex-col items-start before:absolute before:left-2 before:h-full before:-translate-x-1/2 before:translate-y-3 before:self-start before:bg-slate-300 before:px-px after:absolute after:left-2 after:box-content after:h-2 after:w-2 after:-translate-x-1/2 after:translate-y-1.5 after:rounded-full after:border-4 after:border-slate-50 after:bg-indigo-600 group-last:before:hidden sm:flex-row sm:before:left-0 sm:before:ml-[6.5rem] sm:after:left-0 sm:after:ml-[6.5rem]">
+                    <div className="text-xl font-bold text-slate-900">
                       Acquired various companies, inluding Technology Inc.
                     </div>
                   </div>
                   {/* <!-- Content --> */}
-                  <div class="text-slate-500">
+                  <div className="text-slate-500">
                     Pretium lectus quam id leo. Urna et pharetra pharetra massa
                     massa. Adipiscing enim eu neque aliquam vestibulum morbi
                     blandit cursus risus.
                   </div>
                 </div>
                 {/* <!-- Item #4 --> */}
-                <div class="group relative py-6 pl-8 sm:pl-32">
+                <div className="group relative py-6 pl-8 sm:pl-32">
                   {/* <!-- Vertical line (::before) ~ Date ~ Title ~ Circle marker (::after) --> */}
-                  <div class="mb-1 flex flex-col items-start before:absolute before:left-2 before:h-full before:-translate-x-1/2 before:translate-y-3 before:self-start before:bg-slate-300 before:px-px after:absolute after:left-2 after:box-content after:h-2 after:w-2 after:-translate-x-1/2 after:translate-y-1.5 after:rounded-full after:border-4 after:border-slate-50 after:bg-indigo-600 group-last:before:hidden sm:flex-row sm:before:left-0 sm:before:ml-[6.5rem] sm:after:left-0 sm:after:ml-[6.5rem]">
-                    <div class="text-xl font-bold text-slate-900">
+                  <div className="mb-1 flex flex-col items-start before:absolute before:left-2 before:h-full before:-translate-x-1/2 before:translate-y-3 before:self-start before:bg-slate-300 before:px-px after:absolute after:left-2 after:box-content after:h-2 after:w-2 after:-translate-x-1/2 after:translate-y-1.5 after:rounded-full after:border-4 after:border-slate-50 after:bg-indigo-600 group-last:before:hidden sm:flex-row sm:before:left-0 sm:before:ml-[6.5rem] sm:after:left-0 sm:after:ml-[6.5rem]">
+                    <div className="text-xl font-bold text-slate-900">
                       Acme went public at the New York Stock Exchange
                     </div>
                   </div>
                   {/* <!-- Content --> */}
-                  <div class="text-slate-500">
+                  <div className="text-slate-500">
                     Pretium lectus quam id leo. Urna et pharetra pharetra massa
                     massa. Adipiscing enim eu neque aliquam vestibulum morbi
                     blandit cursus risus.
@@ -385,9 +407,9 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="my-52">
+          <section className="py-20 pb-20">
             <div className="grid grid-cols-1 gap-12 px-12 md:grid-cols-3 md:gap-0">
-              <div className="text-3xl font-bold">
+              <div className="text-4xl font-bold">
                 Be the best you <br /> with EQ
               </div>
               <div className="w-3/4">
@@ -403,20 +425,79 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="my-56">
-            <div className="h-[40rem] rounded-2xl bg-blue-100 px-10 py-12 ">
+          {/* what others think of you */}
+          <section className="pb-40">
+            <div className="rounded-2xl bg-blue-50 px-2 py-12 md:px-10 ">
               <p className=" mb-7 text-center text-lg">
                 Let your friends, and co-workers (anonymously) rate your social
                 skills.
               </p>
-              <p className=" text-center text-5xl font-bold">
+              <p className=" mb-24 text-center text-5xl font-bold">
                 Ever wondered what others thinks about you?
               </p>
+
+              <div className="mx-auto mb-40 flex w-full items-center justify-center">
+                <div className="grid w-full grid-cols-2 md:w-3/4">
+                  <div className="relative border-t-4 border-dashed border-yellow-400">
+                    <span className="absolute left-[-16px] top-[-16px] box-content  flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400 text-center  font-bold text-white">
+                      1
+                    </span>
+                    <span className="absolute bottom-[-70px] left-[-120px] box-content block px-5 py-3 text-sm text-black">
+                      Answer questions on your social skills
+                    </span>
+                  </div>
+                  <div className="relative border-t-4 border-dashed border-yellow-400">
+                    <span className="absolute left-[-16px] top-[-16px] box-content  flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400 text-center  font-bold text-white">
+                      2
+                    </span>
+                    <span className="absolute bottom-[-80px] left-[-150px] box-content block px-5 py-3 text-center text-sm text-black">
+                      Let others anonymously answer the same <br /> questions
+                      about you.
+                    </span>
+                    <span className="absolute right-[0px] top-[-16px] box-content flex h-8 w-8  items-center justify-center rounded-full bg-yellow-400 text-center font-bold text-white">
+                      3
+                    </span>
+                    <span className="absolute bottom-[-80px] right-[-120px] box-content block px-5 py-3 text-center text-sm text-black">
+                      Find out where you and others see things <br /> the same
+                      way - and where not
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mx-auto flex h-72 w-3/4 items-center justify-center rounded-md bg-white py-6 shadow-md">
+                <div className="grid w-full grid-cols-3 md:w-3/4">
+                  <div className="relative border-t-2 border-slate-400">
+                    <span className="absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-indigo-600"></span>
+                    <span className="absolute left-[-61px] top-[-84px] box-content block rounded-lg bg-indigo-600 px-5 py-3 text-white">
+                      {" "}
+                      You
+                    </span>
+                  </div>
+                  <div className="relative border-t-2 border-slate-400">
+                    <span className="absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-cyan-400"></span>
+                    <span className="absolute bottom-[-80px] left-[0px] box-content block rounded-lg bg-cyan-400 px-5 py-3 text-white">
+                      Anonymonos 1
+                    </span>
+                  </div>
+                  <div className="relative border-t-2 border-slate-400">
+                    <span className="absolute left-[-16px] top-[-16px] box-content block h-8 w-8 rounded-full bg-amber-400"></span>
+                    <span className="absolute left-[-10px] top-[-80px] box-content block rounded-lg bg-amber-400 px-5 py-3 text-white">
+                      Anonymonos 2
+                    </span>
+                    <span className="absolute right-[0px] top-[-16px] box-content block h-8 w-8 rounded-full bg-teal-400"></span>
+                    <span className="absolute bottom-[-80px] right-[-120px] box-content block rounded-lg bg-teal-400 px-5 py-3 text-white">
+                      Anonymonos 3
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
-          <section className="my-56 flex items-center justify-center">
-            <div className="py-10">
+          {/* start a test */}
+          <section className="flex items-center justify-center pb-40">
+            <div>
               <p className="mb-3 text-center">We privacy seriously</p>
               <p className="mb-3 text-center text-3xl font-bold">
                 Before you get started
@@ -435,17 +516,20 @@ export default function Home() {
                 {" "}
                 Start a test
               </button>
-              <p className="mt-1 text-center text-xs text-slate-400">
+              <p className="mt-3 text-center text-xs text-slate-400">
                 Take only 5 minutes
               </p>
             </div>
           </section>
 
-          <section className="my-56  grid grid-cols-1 rounded-2xl bg-purple-200 py-8 md:px-24 md:py-16 md:grid-cols-2">
-            <div className="px-5 ">
-              <h3 className="mb-16 text-6xl font-bold">Working with us</h3>
+          {/* working with us */}
+          <section className="grid grid-cols-1 gap-20 rounded-2xl bg-purple-200 py-40 pb-0 md:grid-cols-2 md:px-12 md:py-16">
+            <div className="px-5">
+              <h3 className="working_with_us_left mb-16 text-6xl font-bold">
+                Working with us
+              </h3>
               <div>
-                <div className="rounded-xl bg-white px-5 py-12 shadow-md">
+                <div className="w-11/12 rounded-xl bg-white px-5 py-12 shadow-md">
                   <h5 className="mb-4 text-3xl font-bold">
                     👻
                     <br />
@@ -458,10 +542,8 @@ export default function Home() {
                     molestiae nulla!
                   </p>
                 </div>
-                <div className="rounded-xl relative -top-5 bg-orange-50 px-5 py-12 shadow-md">
-                  <h5 className="mb-4 text-3xl font-bold">
-                    Products
-                  </h5>
+                <div className="relative -top-5 w-11/12 rounded-xl bg-orange-50 px-5 py-12 shadow-md">
+                  <h5 className="mb-4 text-3xl font-bold">Products</h5>
                   <p className="text-gray-500">
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                     Voluptatibus mollitia harum eveniet quae, iusto architecto
@@ -472,11 +554,156 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <h3 className="text-right text-6xl font-bold text-purple-600">
-                ahead
-              </h3>
+              <div>
+                <h3 className=" working_with_us_right mb-16 text-right text-6xl font-bold text-purple-600">
+                  ahead
+                </h3>
+                <div className="h-[40rem] space-y-8 overflow-x-hidden overflow-y-scroll">
+                  <div className="mx-auto w-full rounded-lg bg-white p-9 text-gray-400 shadow-md md:w-2/3">
+                    <h4 className="mb-4 font-semibold text-black">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    </h4>
+                    Dolore optio voluptatibus placeat perspiciatis aliquid
+                    excepturi labore mollitia repellendus quam molestias.
+                  </div>
+                  <div className="mx-auto w-full rounded-lg bg-white p-9 text-gray-400 shadow-md md:w-2/3">
+                    <h4 className="mb-4 font-semibold text-black">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    </h4>
+                    Dolore optio voluptatibus placeat perspiciatis aliquid
+                    excepturi labore mollitia repellendus quam molestias.
+                  </div>
+                  <div className="mx-auto w-full rounded-lg bg-white p-9 text-gray-400 shadow-md md:w-2/3">
+                    <h4 className="mb-4 font-semibold text-black">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    </h4>
+                    Dolore optio voluptatibus placeat perspiciatis aliquid
+                    excepturi labore mollitia repellendus quam molestias.
+                  </div>
+                  <div className="mx-auto w-full rounded-lg bg-white p-9 text-gray-400 shadow-md md:w-2/3">
+                    <h4 className="mb-4 font-semibold text-black">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    </h4>
+                    Dolore optio voluptatibus placeat perspiciatis aliquid
+                    excepturi labore mollitia repellendus quam molestias.
+                  </div>
+                  <div className="mx-auto w-full rounded-lg bg-white p-9 text-gray-400 shadow-md md:w-2/3">
+                    <h4 className="mb-4 font-semibold text-black">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    </h4>
+                    Dolore optio voluptatibus placeat perspiciatis aliquid
+                    excepturi labore mollitia repellendus quam molestias.
+                  </div>
+                  <div className="mx-auto w-full rounded-lg bg-white p-9 text-gray-400 shadow-md md:w-2/3">
+                    <h4 className="mb-4 font-semibold text-black">
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    </h4>
+                    Dolore optio voluptatibus placeat perspiciatis aliquid
+                    excepturi labore mollitia repellendus quam molestias.
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
+
+          {/* open positions */}
+          <section className="pb-24 pt-32">
+            <h2 className="open_position_title mb-8 text-6xl font-bold">
+              Open vacanies
+            </h2>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:flex-row">
+              <div className="group rounded-lg bg-yellow-50 p-10 transition-all hover:scale-105 hover:bg-yellow-100">
+                <h6 className="mb-3 text-xl font-bold">
+                  Senior Full Stack Engineer
+                </h6>
+                <ul className="mb-8 list-disc space-y-4	">
+                  <li className="text-sm ">Full-time position</li>
+                  <li className="text-sm ">Berlin or remote</li>
+                  <li className="text-sm ">
+                    $60-$80, 0.5% equity share options
+                  </li>
+                </ul>
+                <button className="hidden rounded-md bg-black px-6 py-2 text-white transition-all group-hover:block">
+                  Apply now
+                </button>
+              </div>
+              <div className="group rounded-lg bg-yellow-50 p-10 transition-all hover:scale-105 hover:bg-yellow-100">
+                <h6 className="mb-3 text-xl font-bold">
+                  Senior Full Stack Engineer
+                </h6>
+                <ul className="mb-8 list-disc space-y-4	">
+                  <li className="text-sm ">Full-time position</li>
+                  <li className="text-sm ">Berlin or remote</li>
+                  <li className="text-sm ">
+                    $60-$80, 0.5% equity share options
+                  </li>
+                </ul>
+                <button className="hidden rounded-md bg-black px-6 py-2 text-white transition-all group-hover:block">
+                  Apply now
+                </button>
+              </div>
+              <div className="group rounded-lg bg-yellow-50 p-10 transition-all hover:scale-105 hover:bg-yellow-100">
+                <h6 className="mb-3 text-xl font-bold">
+                  Senior Full Stack Engineer
+                </h6>
+                <ul className="mb-8 list-disc space-y-4	">
+                  <li className="text-sm ">Full-time position</li>
+                  <li className="text-sm ">Berlin or remote</li>
+                  <li className="text-sm ">
+                    $60-$80, 0.5% equity share options
+                  </li>
+                </ul>
+                <button className="hidden rounded-md bg-black px-6 py-2 text-white transition-all group-hover:block">
+                  Apply now
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* horizontal rule */}
+          <div className="h-[2px] w-full bg-gray-300"></div>
+
+          {/* footer */}
+          <footer className="grid grid-cols-1 py-32">
+            <div className="mb-4 flex flex-col items-center justify-center">
+              <img
+                src="https://www.ahead-app.com/favicon.ico"
+                className="w-16 rounded-xl"
+                alt="logo"
+              />
+              <p className="mt-2 text-lg font-semibold text-purple-500 ">
+                ahead
+              </p>
+            </div>
+            <div className="mb-6 flex flex-row items-center justify-center gap-12">
+              <div className="flex items-center gap-3">
+                <img
+                  src="https://img.icons8.com/ios-filled/50/marker.png"
+                  alt="location"
+                  className="w-8"
+                />
+                <p className="text-sm">Augutro,26 10017 Berlin</p>
+              </div>
+              <div className="flex  items-center  gap-3">
+                <img
+                  src="https://img.icons8.com/ios-filled/50/new-post.png"
+                  alt="email"
+                  className="w-8"
+                />
+                <p className="text-sm">hi@ahead-app.com</p>
+              </div>
+            </div>
+            <div className="mb-6 flex flex-row justify-center">
+              <img
+                src="https://w7.pngwing.com/pngs/506/939/png-transparent-app-store-logo-iphone-app-store-get-started-now-button-electronics-text-telephone-call.png"
+                alt="applelogo"
+                className="w-32"
+              />
+            </div>
+            <div className="mb-6 flex flex-row justify-center text-xs text-gray-400">
+              &#169; 2022 Ahead app. All right reserved
+            </div>
+          </footer>
         </main>
       </div>
     </>
